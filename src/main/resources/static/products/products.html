@@ -19,7 +19,26 @@
         </tr>
         </tbody>
     </table>
-
+    <form novalidate ng-submit="loadPage()">
+        <div class="form-group col-md-1">
+            <label for="minPriceField">min Price</label>
+            <input class="form-control" type="text" ng-model="filter.min_price" id="minPriceField">
+        </div>
+        <p></p>
+        <div class="form-group col-md-1">
+            <label for="maxPriceField">max Price</label>
+            <input class="form-control" type="text" ng-model="filter.max_price" id="maxPriceField">
+        </div>
+        <p></p>
+        <div class="form-group col-md-3">
+            <label for="titleField">part Title</label>
+            <input class="form-control" type="text" ng-model="filter.title" id="titleField">
+        </div>
+        <p></p>
+        <div>
+            <button class="btn btn-primary" type="submit">Apply</button>
+        </div>
+    </form>
     <p></p>
     <nav aria-label="Page navigation example">
         <ul class="pagination">
