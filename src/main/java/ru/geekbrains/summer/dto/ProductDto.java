@@ -2,7 +2,7 @@ package ru.geekbrains.summer.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.geekbrains.summer.model.Product;
+import ru.geekbrains.summer.model.ProductEntity;
 
 import java.math.BigDecimal;
 
@@ -14,10 +14,10 @@ public class ProductDto {
     private String categoryTitle;
     private BigDecimal price;
 
-    public ProductDto(Product product) {
-        this.id = product.getId();
-        this.title = product.getTitle();
-        this.categoryTitle = product.getCategory().getTitle();
-        this.price = product.getPrice();
+    public ProductDto(ProductEntity productEntity) {
+        this.id = productEntity.getId();
+        this.title = productEntity.getTitle();
+        this.categoryTitle = productEntity.getCategoryEntity().getTitle();
+        this.price = productEntity.getPrice();
     }
 }

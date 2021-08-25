@@ -3,7 +3,7 @@ package ru.geekbrains.summer.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.geekbrains.summer.model.OrderItem;
-import ru.geekbrains.summer.model.Product;
+import ru.geekbrains.summer.model.ProductEntity;
 
 import java.math.BigDecimal;
 
@@ -16,12 +16,12 @@ public class OrderItemDto {
     private BigDecimal price;
     private int quantity;
 
-    public OrderItemDto(Product product) {
-        this.productId = product.getId();
+    public OrderItemDto(ProductEntity productEntity) {
+        this.productId = productEntity.getId();
         this.quantity = 1;
-        this.pricePerProduct = product.getPrice();
-        this.price = product.getPrice();
-        this.productTitle = product.getTitle();
+        this.pricePerProduct = productEntity.getPrice();
+        this.price = productEntity.getPrice();
+        this.productTitle = productEntity.getTitle();
     }
 
     public OrderItemDto(OrderItem orderItem) {
@@ -29,7 +29,7 @@ public class OrderItemDto {
         this.quantity = orderItem.getQuantity();
         this.pricePerProduct = orderItem.getPricePerProduct();
         this.price = orderItem.getPrice();
-        this.productTitle = orderItem.getProduct().getTitle();
+        this.productTitle = orderItem.getProductEntity().getTitle();
     }
     public void changeQuantity(int amount) {
         quantity += amount;

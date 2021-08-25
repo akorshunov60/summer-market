@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.summer.dto.ProductDto;
 import ru.geekbrains.summer.exceptions.ResourceNotFoundException;
-import ru.geekbrains.summer.model.Product;
+import ru.geekbrains.summer.model.ProductEntity;
 import ru.geekbrains.summer.services.ProductService;
 
 import java.math.BigDecimal;
@@ -19,7 +19,7 @@ public class ProductController {
 
     @GetMapping(value = "/{id}")
     public ProductDto findById(@PathVariable Long id) {
-        Product p = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found, id: " + id));
+        ProductEntity p = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("ProductEntity not found, id: " + id));
         return new ProductDto(p);
     }
 
@@ -35,10 +35,10 @@ public class ProductController {
 
     @PostMapping
     public ProductDto createNewProduct(@RequestBody ProductDto newProductDto) {
-        Product product = new Product();
-        product.setPrice(newProductDto.getPrice());
-        product.setTitle(newProductDto.getTitle());
-        return new ProductDto(productService.save(product));
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setPrice(newProductDto.getPrice());
+        productEntity.setTitle(newProductDto.getTitle());
+        return new ProductDto(productService.save(productEntity));
     }
 
     @DeleteMapping("/{id}")

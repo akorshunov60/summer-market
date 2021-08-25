@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.geekbrains.summer.dto.OrderItemDto;
-import ru.geekbrains.summer.model.Product;
+import ru.geekbrains.summer.model.ProductEntity;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
@@ -41,8 +41,8 @@ public class Cart {
         return false;
     }
 
-    public void add(Product product) {
-        items.add(new OrderItemDto(product));
+    public void add(ProductEntity productEntity) {
+        items.add(new OrderItemDto(productEntity));
         recalculate();
     }
 
