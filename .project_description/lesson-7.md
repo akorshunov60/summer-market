@@ -16,10 +16,7 @@
     + CategoryControllerTest (Process finished with exit code 0)
     + SpyTest (Process finished with exit code 0)
       
-    - SecurityTest (passed:3 of 4 tests;
-                    Не проходит securityTokenTest(): java.lang.AssertionError: Status expected:<200> but was:<404>
-                    Expected :200
-                    Actual   :404) 
+    + SecurityTest (passed:4 of 4 tests; Process finished with exit code 0)
       
     - FullServerRunTest (org.springframework.web.client.RestClientException:
                         Error while extracting response for type [interface java.util.List] and content type [application/json];

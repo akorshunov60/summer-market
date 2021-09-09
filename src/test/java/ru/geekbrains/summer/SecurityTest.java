@@ -38,7 +38,7 @@ public class SecurityTest {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = "User")
+    @WithMockUser(username = "user", roles = "USER")
     public void securityCheckUserTest() throws Exception {
         mockMvc.perform(get("/api/v1/orders"))
                 .andDo(print())
@@ -52,7 +52,7 @@ public class SecurityTest {
                 "\t\"password\": \"100\"\n" +
                 "}";
         MvcResult result = mockMvc.perform(
-                post("/auth")
+                post("/api/v1/auth")
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

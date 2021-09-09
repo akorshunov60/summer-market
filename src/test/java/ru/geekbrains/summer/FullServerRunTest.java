@@ -20,6 +20,10 @@ public class FullServerRunTest {
     @Test
     public void fullRestTest() {
 
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+
         List<?> categories = restTemplate.getForObject("/api/v1/categories", List.class);
         assertThat(categories).isNotNull();
         assertThat(categories).isNotEmpty();
