@@ -3,8 +3,6 @@ package ru.geekbrains.summer.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.List;
-
 public class JsonUtils {
 
     public static String convertObjectToJson(Object object, Class<?> listClass) throws JsonProcessingException {

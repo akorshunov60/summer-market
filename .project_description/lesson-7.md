@@ -7,15 +7,9 @@
     + UserServiceTest (Process finished with exit code 0)
     + ProductServiceTest (Process finished with exit code 0)
     + RepositoriesTest (Process finished with exit code 0)
-      
-    - CartTest (org.springframework.data.redis.RedisConnectionFailureException:
-               Cannot get Jedis connection; nested exception is redis.clients.jedis.exceptions.
-               JedisConnectionException: Could not get a resource from the pool)
-      
+    + CartTest (Tests passed:1 of 1 test; Process finished with exit code 0)
     + JsonTests (Process finished with exit code 0)
     + CategoryControllerTest (Process finished with exit code 0)
     + SpyTest (Process finished with exit code 0)
-      
     + SecurityTest (Tests passed:4 of 4 tests; Process finished with exit code 0)
-      
     + FullServerRunTest (Tests passed:1 of 1 test; Process finished with exit code 0)

@@ -25,10 +25,10 @@ public class CartTest {
     @MockBean
     private ProductService productService;
 
-//    @BeforeEach
-//    public void initCart() {
-//        cartService.clear("test_cart");
-//    }
+    @BeforeEach
+    public void initCart() {
+        cartService.clear("test_cart");
+    }
 
     @Test
     public void addToCartTest() {
