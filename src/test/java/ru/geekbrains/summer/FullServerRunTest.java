@@ -1,31 +1,27 @@
 package ru.geekbrains.summer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
+import ru.geekbrains.summer.utils.JsonUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RequiredArgsConstructor
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class FullServerRunTest {
 
-    @Autowired
-    private TestRestTemplate restTemplate;
-
     @Test
-    public void fullRestTest() {
+    public void fullRestTest() throws JsonProcessingException {
 
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-
-        Page<?> products = (Page<?>) restTemplate.getForObject("/api/v1/products", List.class);
+        List<?> products = Collections.singletonList(JsonUtils
+                .convertObjectToJson("/api/v1/products", List.class));
         assertThat(products).isNotNull();
         assertThat(products).isNotEmpty();
     }

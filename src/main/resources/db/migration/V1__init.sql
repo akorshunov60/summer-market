@@ -85,7 +85,7 @@ create table order_items
     price             numeric(8, 2) not null,
     price_per_product numeric(8, 2) not null,
     product_id        bigint references products (id),
-    order_id          bigint references products (id),
+    order_id          bigint references orders (id),
     quantity          int,
     created_at        timestamp default current_timestamp,
     updated_at        timestamp default current_timestamp

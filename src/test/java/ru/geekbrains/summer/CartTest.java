@@ -27,26 +27,26 @@ public class CartTest {
 
 //    @BeforeEach
 //    public void initCart() {
-//        cartService.clearCart("test_cart");
+//        cartService.clear("test_cart");
 //    }
 
     @Test
     public void addToCartTest() {
 
         ProductEntity productEntity = new ProductEntity();
-        productEntity.setId(15L);
-        productEntity.setTitle("testProduct");
+        productEntity.setId(5L);
+        productEntity.setTitle("XL");
         productEntity.setPrice(BigDecimal.valueOf(100.0));
 
         CategoryEntity ctge = new CategoryEntity();
-        ctge.setTitle("testCategory");
+        ctge.setTitle("XXL");
         productEntity.setCategoryEntity(ctge);
 
-        Mockito.doReturn(Optional.of(productEntity)).when(productService).findById(15L);
-        cartService.addToCart("test_cart", 15L);
-        cartService.addToCart("test_cart", 15L);
-        cartService.addToCart("test_cart", 15L);
-        Mockito.verify(productService, Mockito.times(1)).findById(ArgumentMatchers.eq(15L));
+        Mockito.doReturn(Optional.of(productEntity)).when(productService).findById(5L);
+        cartService.addToCart("test_cart", 5L);
+        cartService.addToCart("test_cart", 5L);
+        cartService.addToCart("test_cart", 5L);
+        Mockito.verify(productService, Mockito.times(1)).findById(ArgumentMatchers.eq(5L));
         Assertions.assertEquals(1, cartService.getCurrentCart("test_cart").getItems().size());
     }
 }

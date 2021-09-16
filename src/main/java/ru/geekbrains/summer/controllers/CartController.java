@@ -33,7 +33,7 @@ public class CartController {
 
     @GetMapping("/decrement/{productId}")
     public void decrement(@PathVariable Long productId) {
-        cart.changeQuantity(productId, -1);
+        cart.changeQuantity(productId);
     }
 
     @GetMapping("/remove/{productId}")

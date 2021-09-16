@@ -17,6 +17,7 @@ import java.util.List;
 @Slf4j
 @Api("Set of endpoints for categories")
 public class CategoryController {
+
     private final CategoryService categoryService;
 
     @GetMapping("/{id}")

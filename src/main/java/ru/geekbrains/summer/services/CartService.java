@@ -30,9 +30,9 @@ public class CartService {
         save(cartId, cart);
     }
 
-    public void changeQuantityProduct(String cartId, Long productId, int amount) {
+    public void changeQuantityProduct(String cartId, Long productId) {
         Cart cart = getCurrentCart(cartId);
-        cart.changeQuantity(productId, amount);
+        cart.changeQuantity(productId);
         save(cartId, cart);
     }
 
@@ -57,7 +57,7 @@ public class CartService {
         redisTemplate.opsForValue().set(CART_PREFIX + cartId, cart);
     }
 
-    public void clearCart(String cartId) {
+    public void clear(String cartId) {
         Cart cart = getCurrentCart(cartId);
         cart.clear();
         save(cartId, cart);
