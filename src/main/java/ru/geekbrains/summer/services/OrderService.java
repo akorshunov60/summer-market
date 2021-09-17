@@ -8,7 +8,7 @@ import ru.geekbrains.summer.dto.OrderItemDto;
 import ru.geekbrains.summer.exceptions.ResourceNotFoundException;
 import ru.geekbrains.summer.model.Order;
 import ru.geekbrains.summer.model.OrderItem;
-import ru.geekbrains.summer.model.Product;
+import ru.geekbrains.summer.model.ProductEntity;
 import ru.geekbrains.summer.model.User;
 import ru.geekbrains.summer.repositories.OrderRepository;
 import ru.geekbrains.summer.utils.Cart;
@@ -37,12 +37,12 @@ public class OrderService {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setQuantity(o.getQuantity());
-            Product product = productService
+            ProductEntity productEntity = productService
                     .findById(o.getProductId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-            orderItem.setPrice(product.getPrice().multiply(BigDecimal.valueOf(o.getQuantity())));
-            orderItem.setPricePerProduct(product.getPrice());
-            orderItem.setProduct(product);
+                    .orElseThrow(() -> new ResourceNotFoundException("ProductEntity not found"));
+            orderItem.setPrice(productEntity.getPrice().multiply(BigDecimal.valueOf(o.getQuantity())));
+            orderItem.setPricePerProduct(productEntity.getPrice());
+            orderItem.setProductEntity(productEntity);
             order.getItems().add(orderItem);
         }
         orderRepository.save(order);

@@ -2,7 +2,7 @@ package ru.geekbrains.summer.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.geekbrains.summer.model.Category;
+import ru.geekbrains.summer.model.CategoryEntity;
 import ru.geekbrains.summer.services.CategoryService;
 import ru.geekbrains.summer.exceptions.ResourceNotFoundException;
 
@@ -13,8 +13,8 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("/{id}")
-    public Category findById(@PathVariable Long id) {
-        Category c = categoryService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found, id: " + id));
+    public CategoryEntity findById(@PathVariable Long id) {
+        CategoryEntity c = categoryService.findById(id).orElseThrow(() -> new ResourceNotFoundException("CategoryEntity not found, id: " + id));
         return c;
     }
 }

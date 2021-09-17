@@ -1,6 +1,6 @@
 # Урок 2. homeEx-2
 
-## 1. Добавить фильтр по максимальной цене:
+# 1. Добавить фильтр по максимальной цене:
 
 1. Добавляем в класс ProductSpecifications метод:
    public static Specification<Product> priceLessThanOrEqualTo(BigDecimal maxPrice) {...}
