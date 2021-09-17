@@ -15,7 +15,11 @@ angular.module('app').controller('productsController', function ($scope, $http, 
             url: contextPath + '/api/v1/products',
             method: 'GET',
             params: {
+                min_price: $scope.filter ? $scope.filter.min_price : null,
+                max_price: $scope.filter ? $scope.filter.max_price : null,
+                title: $scope.filter ? $scope.filter.title : null,
                 'p': pageIndex
+
             }
         }).then(function (response) {
             $scope.productsPage = response.data;
