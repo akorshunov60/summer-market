@@ -1,32 +1,24 @@
-package ru.geekbrains.summer.utils;
+package ru.geekbrains.summer.beans;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.geekbrains.summer.dto.OrderItemDto;
 import ru.geekbrains.summer.model.ProductEntity;
 
-import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 @Component
-@NoArgsConstructor
 @Data
 public class Cart {
+
     private List<OrderItemDto> items;
     private BigDecimal price;
 
-    @PostConstruct
-    public void init() {
-        this.items = new ArrayList<>();
-        this.price = BigDecimal.ZERO;
-    }
-
-    public void clear() {
-        items.clear();
+    public Cart() {
+        items = new ArrayList<>();
         price = BigDecimal.ZERO;
     }
 
@@ -46,6 +38,11 @@ public class Cart {
         recalculate();
     }
 
+    public void clear() {
+        items.clear();
+        price = BigDecimal.ZERO;
+    }
+
     private void recalculate() {
         price = BigDecimal.ZERO;
         for (OrderItemDto oid : items) {
@@ -58,19 +55,36 @@ public class Cart {
         recalculate();
     }
 
-    public boolean changeQuantity(Long productId, int amount) {
+    public void changeQuantity(Long productId) {
         Iterator<OrderItemDto> iter = items.iterator();
         while (iter.hasNext()) {
             OrderItemDto o = iter.next();
             if (o.getProductId().equals(productId)) {
-                o.changeQuantity(amount);
+                o.changeQuantity(-1);
                 if (o.getQuantity() <= 0) {
                     iter.remove();
                 }
                 recalculate();
-                return true;
+                return;
             }
         }
-        return false;
+    }
+
+    public void merge(Cart another) {
+        for (OrderItemDto anotherItem : another.items) {
+            boolean merged = false;
+            for (OrderItemDto myItem : items) {
+                if (myItem.getProductId().equals(anotherItem.getProductId())) {
+                    myItem.changeQuantity(anotherItem.getQuantity());
+                    merged = true;
+                    break;
+                }
+            }
+            if (!merged) {
+                items.add(anotherItem);
+            }
+        }
+        recalculate();
+        another.clear();
     }
 }

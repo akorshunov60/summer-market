@@ -7,6 +7,7 @@ import ru.geekbrains.summer.model.CategoryEntity;
 import ru.geekbrains.summer.repositories.CategoryRepository;
 import ru.geekbrains.summer.soap.categories.Category;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -34,4 +35,7 @@ public class CategoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Category " + title + " not found"));
     }
 
+    public List<CategoryEntity> findAll() {
+        return categoryRepository.findAll();
+    }
 }

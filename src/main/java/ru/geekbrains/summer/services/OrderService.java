@@ -11,7 +11,7 @@ import ru.geekbrains.summer.model.OrderItem;
 import ru.geekbrains.summer.model.ProductEntity;
 import ru.geekbrains.summer.model.User;
 import ru.geekbrains.summer.repositories.OrderRepository;
-import ru.geekbrains.summer.utils.Cart;
+import ru.geekbrains.summer.beans.Cart;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

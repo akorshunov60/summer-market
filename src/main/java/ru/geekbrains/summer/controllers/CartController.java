@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.geekbrains.summer.exceptions.ResourceNotFoundException;
 import ru.geekbrains.summer.services.ProductService;
-import ru.geekbrains.summer.utils.Cart;
+import ru.geekbrains.summer.beans.Cart;
 
 @RestController
 @RequestMapping("/api/v1/cart")
@@ -24,13 +24,16 @@ public class CartController {
     @GetMapping("/add/{productId}")
     public void add(@PathVariable Long productId) {
         if (!cart.add(productId)) {
-            cart.add(productService.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Unable add products to cart. ProductEntity not found id: " + productId)));
+            cart.add(productService
+                    .findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Unable add products to cart." +
+                            "ProductEntity not found id: " + productId)));
         }
     }
 
     @GetMapping("/decrement/{productId}")
     public void decrement(@PathVariable Long productId) {
-        cart.changeQuantity(productId, -1);
+        cart.changeQuantity(productId);
     }
 
     @GetMapping("/remove/{productId}")
