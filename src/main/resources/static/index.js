@@ -86,10 +86,6 @@ angular.module('app').controller('indexController', function ($rootScope, $scope
     };
 
     $rootScope.isUserLoggedIn = function () {
-        if ($localStorage.summerUser) {
-            return true;
-        } else {
-            return false;
-        }
+        return !!$localStorage.summerUser;
     };
 });
