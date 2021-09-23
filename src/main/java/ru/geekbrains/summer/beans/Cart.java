@@ -1,7 +1,6 @@
 package ru.geekbrains.summer.beans;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
 import ru.geekbrains.summer.dto.OrderItemDto;
 import ru.geekbrains.summer.model.ProductEntity;
 
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@Component
 @Data
 public class Cart {
 
@@ -18,7 +16,12 @@ public class Cart {
     private BigDecimal price;
 
     public Cart() {
-        items = new ArrayList<>();
+        this.items = new ArrayList<>();
+        this.price = BigDecimal.ZERO;
+    }
+
+    public void clear() {
+        items.clear();
         price = BigDecimal.ZERO;
     }
 
@@ -33,14 +36,9 @@ public class Cart {
         return false;
     }
 
-    public void add(ProductEntity productEntity) {
-        items.add(new OrderItemDto(productEntity));
+    public void add(ProductEntity product) {
+        items.add(new OrderItemDto(product));
         recalculate();
-    }
-
-    public void clear() {
-        items.clear();
-        price = BigDecimal.ZERO;
     }
 
     private void recalculate() {
@@ -55,12 +53,12 @@ public class Cart {
         recalculate();
     }
 
-    public void changeQuantity(Long productId) {
+    public void changeQuantity(Long productId, int amount) {
         Iterator<OrderItemDto> iter = items.iterator();
         while (iter.hasNext()) {
             OrderItemDto o = iter.next();
             if (o.getProductId().equals(productId)) {
-                o.changeQuantity(-1);
+                o.changeQuantity(amount);
                 if (o.getQuantity() <= 0) {
                     iter.remove();
                 }

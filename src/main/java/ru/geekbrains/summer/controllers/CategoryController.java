@@ -1,13 +1,14 @@
 package ru.geekbrains.summer.controllers;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import ru.geekbrains.summer.exceptions.ResourceNotFoundException;
 import ru.geekbrains.summer.model.CategoryEntity;
 import ru.geekbrains.summer.services.CategoryService;
-import ru.geekbrains.summer.exceptions.ResourceNotFoundException;
 
 import java.util.List;
 
@@ -15,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/categories")
 @Slf4j
-@Api("Set of endpoints for categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -28,7 +28,6 @@ public class CategoryController {
     }
 
     @GetMapping
-    @ApiOperation("Returns list of all categories in the repository.")
     public List<CategoryEntity> findAllCategories() {
         return categoryService.findAll();
     }
