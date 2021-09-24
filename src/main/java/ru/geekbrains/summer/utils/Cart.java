@@ -1,4 +1,4 @@
-package ru.geekbrains.summer.beans;
+package ru.geekbrains.summer.utils;
 
 import lombok.Data;
 import ru.geekbrains.summer.dto.OrderItemDto;

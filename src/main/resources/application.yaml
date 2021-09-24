@@ -24,3 +24,6 @@ spring:
 #      enabled: true
 #      settings:
 #        web-allow-others: false
+utils:
+  cart:
+    prefix: SUMMER_CART_

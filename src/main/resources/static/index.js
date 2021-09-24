@@ -1,4 +1,4 @@
-(function () {
+(function ($localStorage) {
     'use strict';
 
     angular
@@ -44,13 +44,15 @@
     }
 })();
 
-angular.module('app').controller('indexController', function ($rootScope, $scope, $http, $localStorage) {
+angular.module('app').controller('indexController', function ($rootScope, $location, $scope, $http, $localStorage) {
     const contextPath = 'http://localhost:8189/summer/api/v1';
 
     $scope.tryToAuth = function () {
         $http.post(contextPath + '/auth', $scope.user)
             .then(function successCallback(response) {
                 if (response.data.token) {
+                    $location.path('/products');
+
                     $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
                     $localStorage.summerUser = {username: $scope.user.username, token: response.data.token};
 
@@ -71,6 +73,7 @@ angular.module('app').controller('indexController', function ($rootScope, $scope
     };
 
     $scope.tryToLogout = function () {
+        $location.path('/products');
         $scope.clearUser();
         if ($scope.user.username) {
             $scope.user.username = null;

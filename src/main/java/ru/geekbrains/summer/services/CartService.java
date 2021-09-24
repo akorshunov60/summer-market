@@ -1,39 +1,80 @@
 package ru.geekbrains.summer.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import ru.geekbrains.summer.beans.Cart;
+import ru.geekbrains.summer.utils.Cart;
+import ru.geekbrains.summer.exceptions.ResourceNotFoundException;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
 public class CartService {
 
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ProductService productService;
 
-    private static final String CART_PREFIX = "SummerMarketCart_";
+    @Value("${utils.cart.prefix}")
+    private String cartPrefix;
 
-    public String generateCart() {
-        String uuid = UUID.randomUUID().toString();
-        redisTemplate.opsForValue().set(CART_PREFIX + uuid, new Cart());
-        return uuid;
+    public String getCartUuidFromSuffix(String suffix) {
+        return cartPrefix + suffix;
     }
 
-    public Cart getCurrentCart(String uuid) {
+    public String generateCartUuid() {
+        return UUID.randomUUID().toString();
+    }
 
-        if (!redisTemplate.hasKey(CART_PREFIX + uuid)) {
-            redisTemplate.opsForValue().set(CART_PREFIX + uuid, new Cart());
+    public Cart getCurrentCart(String cartKey) throws NullPointerException {
+        if (!redisTemplate.hasKey(cartKey)) {
+            redisTemplate.opsForValue().set(cartKey, new Cart());
         }
-        return (Cart)redisTemplate.opsForValue().get(CART_PREFIX + uuid);
+        return (Cart) redisTemplate.opsForValue().get(cartKey);
     }
 
-    public void deleteCart(String uuid) {
-        redisTemplate.opsForValue().set(CART_PREFIX + uuid, null);
+    public void addToCart(String cartKey, Long productId) {
+        execute(cartKey, c -> {
+            if (!c.add(productId)) {
+                c.add(productService
+                        .findById(productId)
+                        .orElseThrow(
+                                () -> new ResourceNotFoundException(
+                                        "Unable add product to cart. Product not found id: " + productId
+                                )));
+            }
+        });
     }
 
-    public void updateCart(Cart cart, String uuid) {
-        redisTemplate.opsForValue().set(CART_PREFIX + uuid, cart);
+    public void clearCart(String cartKey) {
+        execute(cartKey, Cart::clear);
+    }
+
+    public void removeItemFromCart(String cartKey, Long productId) {
+        execute(cartKey, c -> c.remove(productId));
+    }
+
+    public void decrementItem(String cartKey, Long productId) {
+        execute(cartKey, c -> c.changeQuantity(productId, -1));
+    }
+
+    public void merge(String userCartKey, String guestCartKey) {
+        Cart guestCart = getCurrentCart(guestCartKey);
+        Cart userCart = getCurrentCart(userCartKey);
+        userCart.merge(guestCart);
+        updateCart(guestCartKey, guestCart);
+        updateCart(userCartKey, userCart);
+    }
+
+    private void execute(String cartKey, Consumer<Cart> action) {
+        Cart cart = getCurrentCart(cartKey);
+        action.accept(cart);
+        redisTemplate.opsForValue().set(cartKey, cart);
+    }
+
+    public void updateCart(String cartKey, Cart cart) {
+        redisTemplate.opsForValue().set(cartKey, cart);
     }
 }

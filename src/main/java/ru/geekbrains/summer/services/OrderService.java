@@ -11,7 +11,7 @@ import ru.geekbrains.summer.model.OrderItem;
 import ru.geekbrains.summer.model.ProductEntity;
 import ru.geekbrains.summer.model.User;
 import ru.geekbrains.summer.repositories.OrderRepository;
-import ru.geekbrains.summer.beans.Cart;
+import ru.geekbrains.summer.utils.Cart;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class OrderService {
 
     @Transactional
     public void createOrder(User user, String address, String phone) {
-        Cart cart = cartService.getCurrentCart(user.getUsername());
+        Cart cart = cartService.getCurrentCart(cartService.getCartUuidFromSuffix(user.getUsername()));
         Order order = new Order();
         order.setPrice(cart.getPrice());
         order.setItems(new ArrayList<>());
@@ -41,7 +41,11 @@ public class OrderService {
             orderItem.setQuantity(o.getQuantity());
             ProductEntity productEntity = productService
                     .findById(o.getProductId())
-                    .orElseThrow(() -> new ResourceNotFoundException("ProductEntity not found"));
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException(
+                                    "Product not found"
+                            )
+                    );
             orderItem.setPrice(productEntity.getPrice().multiply(BigDecimal.valueOf(o.getQuantity())));
             orderItem.setPricePerProduct(productEntity.getPrice());
             orderItem.setProductEntity(productEntity);
@@ -49,7 +53,7 @@ public class OrderService {
         }
         orderRepository.save(order);
         cart.clear();
-        cartService.updateCart(cart, user.getUsername());
+        cartService.updateCart(cartService.getCartUuidFromSuffix(user.getUsername()), cart);
     }
 
     @Transactional
