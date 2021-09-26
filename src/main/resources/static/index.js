@@ -24,36 +24,60 @@
                 templateUrl: 'orders/orders.html',
                 controller: 'ordersController'
             })
+            .when('/order_confirmation', {
+                templateUrl: 'order_confirmation/order_confirmation.html',
+                controller: 'orderConfirmationController'
+            })
             .otherwise({
                 redirectTo: '/'
             });
     }
 
     function run($rootScope, $http, $localStorage) {
+        const contextPath = 'http://localhost:8189/summer/api/v1';
+
         if ($localStorage.summerUser) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.summerUser.token;
+        }
+        if (!$localStorage.guestCartUuid) {
+            $http.get(contextPath + '/cart/generate')
+                .then(function successCallback(response) {
+                    $localStorage.guestCartUuid = response.data.value;
+                });
         }
     }
 })();
 
-angular.module('app').controller('indexController', function ($rootScope, $scope, $http, $localStorage) {
+angular.module('app').controller('indexController', function ($rootScope, $location, $scope, $http, $localStorage) {
     const contextPath = 'http://localhost:8189/summer/api/v1';
 
     $scope.tryToAuth = function () {
         $http.post(contextPath + '/auth', $scope.user)
             .then(function successCallback(response) {
                 if (response.data.token) {
+                    $location.path('/products');
+
                     $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
                     $localStorage.summerUser = {username: $scope.user.username, token: response.data.token};
 
-                    $scope.user.username = null;
-                    $scope.user.password = null;
+                    if ($scope.user.username) {
+                        $scope.user.username = null;
+                    }
+                    if ($scope.user.password) {
+                        $scope.user.password = null;
+                    }
+
+                    $http.get(contextPath + '/cart/' + $localStorage.guestCartUuid + '/merge')
+                        .then(function successCallback(response) {
+                            $localStorage.guestCartUuid = response.data.value;
+                        });
                 }
             }, function errorCallback(response) {
             });
     };
 
     $scope.tryToLogout = function () {
+        $location.path('/products');
         $scope.clearUser();
         if ($scope.user.username) {
             $scope.user.username = null;
@@ -69,10 +93,6 @@ angular.module('app').controller('indexController', function ($rootScope, $scope
     };
 
     $rootScope.isUserLoggedIn = function () {
-        if ($localStorage.summerUser) {
-            return true;
-        } else {
-            return false;
-        }
+        return !!$localStorage.summerUser;
     };
 });

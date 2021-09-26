@@ -1,0 +1,47 @@
+<div>
+    <p></p>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">Summer Market</li>
+            <li class="breadcrumb-item active" aria-current="page">Подтверждение заказа</li>
+        </ol>
+    </nav>
+    <p></p>
+    <table class="table table-hover" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>Название</td>
+            <td>Количество</td>
+            <td>Цена</td>
+        </tr>
+        <tbody>
+
+        <tr ng-repeat="oi in cart.items">
+            <td>{{oi.productTitle}}</td>
+            <td>{{oi.quantity}}</td>
+            <td>{{oi.pricePerItem + ' * ' + oi.quantity + ' = ' + oi.price}}</td>
+        </tr>
+        <tr>
+            <td>Итого</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{{cart.sum}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <form novalidate ng-submit="createOrder()">
+        <div class="form-group col-md-6">
+            <label for="destinationField">Адрес доставки</label>
+            <input class="form-control" type="text" ng-model="order_info.address" id="destinationField">
+        </div>
+        <p></p>
+        <div class="form-group col-md-6">
+            <label for="phoneField">Телефон получателя</label>
+            <input class="form-control" type="text" ng-model="order_info.phone" id="phoneField">
+        </div>
+        <p></p>
+        <div>
+            <button ng-show="isUserLoggedIn()" class="btn btn-primary" ng-click="createOrder()">Оформить заказ</button>
+        </div>
+    </form>
+</div>
