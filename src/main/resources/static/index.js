@@ -24,6 +24,10 @@
                 templateUrl: 'orders/orders.html',
                 controller: 'ordersController'
             })
+            .when('/order_confirmation', {
+                templateUrl: 'order_confirmation/order_confirmation.html',
+                controller: 'orderConfirmationController'
+            })
             .otherwise({
                 redirectTo: '/'
             });
