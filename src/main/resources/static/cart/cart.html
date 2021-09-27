@@ -36,7 +36,17 @@
         <button class="btn btn-danger" ng-click="clearCart()">Очистить корзину</button>
         <p></p>
 
-        <form novalidate ng-submit="createOrder()">
+        <form novalidate ng-submit="goToOrderConfirmation()">
+<!--            <div class="form-group col-md-6">-->
+<!--                <label for="destinationField">Адрес доставки</label>-->
+<!--                <input class="form-control" type="text" ng-model="order_info.address" id="destinationField">-->
+<!--            </div>-->
+<!--            <p></p>-->
+<!--            <div class="form-group col-md-6">-->
+<!--                <label for="phoneField">Телефон получателя</label>-->
+<!--                <input class="form-control" type="text" ng-model="order_info.phone" id="phoneField">-->
+<!--            </div>-->
+            <p></p>
             <div>
                 <button ng-show="isUserLoggedIn()" class="btn btn-primary" ng-click="goToOrderConfirmation()">Оформить заказ</button>
                 <button ng-show="!isUserLoggedIn()" class="btn btn-secondary">Авторизуйтесь для оформления заказа</button>

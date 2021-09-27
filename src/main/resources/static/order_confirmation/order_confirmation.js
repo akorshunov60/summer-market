@@ -1,17 +1,14 @@
 angular.module('app').controller('orderConfirmationController', function ($scope, $http, $location, $localStorage) {
     const contextPath = 'http://localhost:8189/summer';
 
-    $scope.cartContentRequest = function () {
+    $scope.loadCart = function () {
         $http({
-            url: contextPath + '/api/v1/cart',
-            method: 'GET',
-            params: {
-                cartName: $localStorage.guestCartUuid
-            }
+            url: contextPath + '/api/v1/cart/' + $localStorage.guestCartUuid,
+            method: 'GET'
         }).then(function (response) {
             $scope.cart = response.data;
         });
-    };
+    }
 
     $scope.createOrder = function () {
         $http({
@@ -28,4 +25,8 @@ angular.module('app').controller('orderConfirmationController', function ($scope
             alert(response.data.messages);
         });
     }
+
+    $scope.loadCart();
+    console.log("cart page loaded");
+
 });
