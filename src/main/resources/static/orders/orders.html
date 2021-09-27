@@ -16,9 +16,10 @@
             <td>{{o.id}}</td>
             <td>
                 <div ng-repeat="oi in o.items">
-                    <span>{{oi.productTitle + '*' + oi.quantity}}</span>
+                    <span>{{oi.productTitle + ' x' + oi.quantity}}</span>
                     <p></p>
                 </div>
+
             </td>
             <td>{{o.address}}</td>
             <td>{{o.phone}}</td>

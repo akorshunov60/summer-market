@@ -1,10 +1,15 @@
 package ru.geekbrains.summer.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
 public class StringResponse {
+
     private String value;
+
+    public StringResponse(String value) {
+        this.value = value;
+    }
 }
