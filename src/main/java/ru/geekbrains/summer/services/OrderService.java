@@ -60,4 +60,12 @@ public class OrderService {
     public List<OrderDto> findAllDtosByUsername(String username) {
         return orderRepository.findAllByUsername(username).stream().map(OrderDto::new).collect(Collectors.toList());
     }
+
+    public Order findById(Long id) {
+        return orderRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Order not found")
+                );
+    }
 }

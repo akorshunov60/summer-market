@@ -69,7 +69,6 @@ angular.module('app').controller('indexController', function ($rootScope, $locat
 
                     $http.get(contextPath + '/cart/' + $localStorage.guestCartUuid + '/merge')
                         .then(function successCallback(response) {
-                            $localStorage.guestCartUuid = response.data.value;
                         });
                 }
             }, function errorCallback(response) {
@@ -93,10 +92,6 @@ angular.module('app').controller('indexController', function ($rootScope, $locat
     };
 
     $rootScope.isUserLoggedIn = function () {
-        if ($localStorage.summerUser) {
-            return true;
-        } else {
-            return false;
-        }
+        return !!$localStorage.summerUser;
     };
 });
