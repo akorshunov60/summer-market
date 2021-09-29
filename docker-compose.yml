@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:9.6
+    domainname: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-U", "postgres" ]
+      interval: 5s
+      timeout: 1s
+      retries: 2
+
+  flyway:
+    image: boxfuse/flyway
+    command: -url=jdbc:postgresql://postgres:5432/postgres -schemas=public -user=postgres -password=postgres -connectRetries=60 migrate
+    volumes:
+      - ./flyway:/flyway/sql
+    depends_on:
+      - postgres
+
+  redis:
+    image: redis:6.2.5
+    domainname: redis
+    ports:
+      - "6379:6379"
