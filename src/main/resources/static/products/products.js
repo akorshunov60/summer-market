@@ -3,10 +3,9 @@ angular.module('app').controller('productsController', function ($scope, $http, 
 
     $scope.addToCart = function (productId) {
         $http({
-            url: contextPath + '/api/v1/cart/add/' + productId,
+            url: contextPath + '/api/v1/cart/' + $localStorage.guestCartUuid + '/add/' + productId,
             method: 'GET'
         }).then(function (response) {
-            $scope.loadCart();
         });
     }
 
@@ -15,11 +14,10 @@ angular.module('app').controller('productsController', function ($scope, $http, 
             url: contextPath + '/api/v1/products',
             method: 'GET',
             params: {
-                min_price: $scope.filter ? $scope.filter.min_price : null,
-                max_price: $scope.filter ? $scope.filter.max_price : null,
+                p: pageIndex,
                 title: $scope.filter ? $scope.filter.title : null,
-                'p': pageIndex
-
+                min_price: $scope.filter ? $scope.filter.min_price : null,
+                max_price: $scope.filter ? $scope.filter.max_price : null
             }
         }).then(function (response) {
             $scope.productsPage = response.data;

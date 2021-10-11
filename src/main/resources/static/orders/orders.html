@@ -9,6 +9,7 @@
             <td>Адрес доставки</td>
             <td>Телефон</td>
             <td>Цена</td>
+            <td>Статус заказа</td>
         </tr>
         </thead>
         <tbody>
@@ -16,14 +17,19 @@
             <td>{{o.id}}</td>
             <td>
                 <div ng-repeat="oi in o.items">
-                    <span>{{oi.productTitle + '*' + oi.quantity}}</span>
+                    <span>{{oi.productTitle + ' x' + oi.quantity}}</span>
                     <p></p>
                 </div>
             </td>
             <td>{{o.address}}</td>
             <td>{{o.phone}}</td>
             <td>{{o.price}}</td>
+            <td>{{o.status}}</td>
+            <td>
+                <button class="btn btn-primary" ng-click="pay(o.id)">Оплатить</button>
+            </td>
         </tr>
         </tbody>
     </table>
+    <div id="paypal-button-container"></div>
 </div>

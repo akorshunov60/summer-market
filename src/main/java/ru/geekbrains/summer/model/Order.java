@@ -15,14 +15,27 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "orders")
+//@NamedEntityGraph(
+//        name = "orders.for-front",
+//        attributeNodes = {
+//                @NamedAttributeNode(value = "items", subgraph = "items-products")
+//        },
+//        subgraphs = {
+//                @NamedSubgraph(
+//                        name = "items-products",
+//                        attributeNodes = {
+//                                @NamedAttributeNode("product")
+//                        }
+//                )
+//        }
+//)
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @OneToMany(mappedBy = "order")
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items;
 
     @Column(name = "price")
@@ -31,6 +44,9 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "status")
+    private String status;
 
     @Column(name = "address")
     private String address;

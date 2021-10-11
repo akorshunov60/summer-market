@@ -19,6 +19,7 @@ import ru.geekbrains.summer.configs.JwtTokenUtil;
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
+
     private final UserService userService;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
@@ -26,9 +27,16 @@ public class AuthController {
     @PostMapping("/api/v1/auth")
     public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+            authenticationManager
+                    .authenticate(
+                            new UsernamePasswordAuthenticationToken(
+                                    authRequest.getUsername(),
+                                    authRequest.getPassword()
+                            ));
         } catch (BadCredentialsException ex) {
-            return new ResponseEntity<>(new MarketError("Incorrect username or password"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(
+                    new MarketError("Incorrect username or password"),
+                    HttpStatus.UNAUTHORIZED);
         }
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
