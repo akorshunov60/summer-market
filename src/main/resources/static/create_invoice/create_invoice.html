@@ -1,0 +1,30 @@
+<div>
+    <h3>Оформление счета</h3>
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <td>Название</td>
+                <td>Количество</td>
+                <td>Цена</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="oi in order.items">
+                <td>{{oi.productTitle}}</td>
+                <td>
+                    {{oi.quantity}}
+                </td>
+                <td>{{oi.quantity + ' x ' + oi.pricePerProduct + ' = ' + oi.price}}</td>
+            </tr>
+            <tr>
+                <td>Итого</td>
+                <td></td>
+                <td>{{order.price}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <p></p>
+        <div id="paypal-buttons"></div>
+    </div>
+</div>

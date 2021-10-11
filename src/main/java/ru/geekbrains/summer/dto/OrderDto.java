@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 @Data
 public class OrderDto {
     private Long id;
+    private String status;
     private String address;
     private String phone;
     private BigDecimal price;
@@ -19,6 +20,7 @@ public class OrderDto {
 
     public OrderDto(Order order) {
         this.id = order.getId();
+        this.status = order.getStatus();
         this.address = order.getAddress();
         this.phone = order.getPhone();
         this.price = order.getPrice();

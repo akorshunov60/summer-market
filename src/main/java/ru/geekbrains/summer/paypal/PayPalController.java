@@ -1,134 +1,58 @@
 package ru.geekbrains.summer.paypal;
 
-import com.paypal.api.payments.*;
-import com.paypal.base.rest.APIContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import com.paypal.core.PayPalHttpClient;
+import com.paypal.http.HttpResponse;
+import com.paypal.orders.Order;
+import com.paypal.orders.OrderRequest;
+import com.paypal.orders.OrdersCaptureRequest;
+import com.paypal.orders.OrdersCreateRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import ru.geekbrains.summer.exceptions.ExecuteOperationException;
 import ru.geekbrains.summer.services.OrderService;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/api/v1/paypal")
-@Deprecated
+@RequiredArgsConstructor
+@CrossOrigin("*")
 public class PayPalController {
-    @Value("${paypal.client-id}")
-    private String clientId;
 
-    @Value("${paypal.client-secret}")
-    private String clientSecret;
+    private final PayPalHttpClient payPalClient;
+    private final PayPalService payPalService;
+    private final OrderService orderService;
 
-    @Value("${paypal.mode}")
-    private String mode;
+    @PostMapping("/create/{orderId}")
+    public ResponseEntity<?> createOrder(@PathVariable Long orderId) throws IOException {
 
-    @Value("${paypal.redirect-root}")
-    private String redirectRoot;
-
-    private APIContext apiContext;
-    private OrderService orderService;
-
-    @Autowired
-    public PayPalController(OrderService orderService) {
-        this.orderService = orderService;
+        OrdersCreateRequest request = new OrdersCreateRequest();
+        request.prefer("return=representation");
+        request.requestBody(payPalService.createOrderRequest(orderId));
+        HttpResponse<Order> response = payPalClient.execute(request);
+        return new ResponseEntity<>(response.result().id(), HttpStatus.valueOf(response.statusCode()));
     }
 
-    @PostConstruct
-    public void init() {
-        apiContext = new APIContext(clientId, clientSecret, mode);
-    }
+    @PostMapping("/capture/{payPalId}")
+    public ResponseEntity<?> captureOrder(@PathVariable String payPalId) throws IOException {
 
-    @GetMapping("/buy/{orderId}")
-    @ResponseBody
-    public Payment buy(@PathVariable(name = "orderId") Long orderId, Principal principal) {
-        try {
-            ru.geekbrains.summer.model.Order order = orderService.findById(orderId);
+        OrdersCaptureRequest request = new OrdersCaptureRequest(payPalId);
+        request.requestBody(new OrderRequest());
 
-            Payer payer = new Payer();
-            payer.setPaymentMethod("paypal");
-            RedirectUrls redirectUrls = new RedirectUrls();
-            redirectUrls.setCancelUrl(redirectRoot + "/cancel");
-            redirectUrls.setReturnUrl(redirectRoot + "/success/" + order.getId());
+        HttpResponse<com.paypal.orders.Order> response = payPalClient.execute(request);
+        com.paypal.orders.Order payPalOrder = response.result();
 
-            Amount amount = new Amount();
-            amount.setCurrency("EUR");
-            amount.setTotal(order.getPrice().toString());
-
-            Transaction transaction = new Transaction();
-            transaction.setAmount(amount);
-            transaction.setDescription("Покупка в Summer Market");
-
-            List<Transaction> transactions = new ArrayList<>();
-            transactions.add(transaction);
-
-            Payment payment = new Payment();
-            payment.setPayer(payer);
-            payment.setRedirectUrls(redirectUrls);
-            payment.setTransactions(transactions);
-            payment.setIntent("sale");
-
-            Payment doPayment = payment.create(apiContext);
-
-            return doPayment;
-
-//            Iterator<Links> links = doPayment.getLinks().iterator();
-//
-//            while (links.hasNext()) {
-//                Links link = links.next();
-//                if (link.getRel().equalsIgnoreCase("approval_url")) {
-//                    return "redirect:" + link.getHref();
-//                }
-//            }
-        } catch (Exception e) {
-            throw new ExecuteOperationException("Невозможно выполнить платеж");
+        if ("COMPLETED".equals(payPalOrder.status())) {
+            long orderId = Long.parseLong(payPalOrder.purchaseUnits().get(0).referenceId());
+            Optional<ru.geekbrains.summer.model.Order> orderOptional = orderService.findOrderById(orderId);
+            return new ResponseEntity<>("The invoice has been successfully paid!", HttpStatus.valueOf(response.statusCode()));
         }
-    }
-
-    @GetMapping("/success/{orderId}")
-    @ResponseBody
-    public String success(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable(name = "orderId") Long orderId) {
-        try {
-            String paymentId = request.getParameter("paymentId");
-            String payerId = request.getParameter("PayerID");
-
-            if (paymentId == null || paymentId.isEmpty() || payerId == null || payerId.isEmpty()) {
-                return "redirect:/";
-            }
-
-            Payment payment = new Payment();
-            payment.setId(paymentId);
-
-            PaymentExecution paymentExecution = new PaymentExecution();
-            paymentExecution.setPayerId(payerId);
-
-            Payment executedPayment = payment.execute(apiContext, paymentExecution);
-
-            if (executedPayment.getState().equals("approved")) {
-                model.addAttribute("message", "Ваш заказ #" + orderId + " сформирован и оплачен");
-            } else {
-                model.addAttribute("message", "Что-то пошло не так при формировании заказа, попробуйте повторить операцию");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "paypal-result";
-    }
-
-    @GetMapping("/cancel")
-    @ResponseBody
-    public String cancel(Model model) {
-        model.addAttribute("message", "Оплата заказа была отменена");
-        return "paypal-result";
+        return new ResponseEntity<>(payPalOrder, HttpStatus.valueOf(response.statusCode()));
     }
 }

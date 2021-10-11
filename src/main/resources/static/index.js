@@ -28,6 +28,10 @@
                 templateUrl: 'orders/orders.html',
                 controller: 'ordersController'
             })
+            .when('/create_invoice/:orderId', {
+                templateUrl: 'create_invoice/create_invoice.html',
+                controller: 'createInvoiceController'
+            })
             .otherwise({
                 redirectTo: '/'
             });
@@ -48,7 +52,10 @@
     }
 })();
 
-angular.module('app').controller('indexController', function ($rootScope, $location, $scope, $http, $localStorage) {
+angular
+    .module('app')
+    .controller('indexController', function ($rootScope, $location, $scope, $http, $localStorage) {
+
     const contextPath = 'http://localhost:8189/summer/api/v1';
 
     $scope.tryToAuth = function () {

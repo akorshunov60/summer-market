@@ -45,6 +45,9 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "status")
+    private String status;
+
     @Column(name = "address")
     private String address;
 

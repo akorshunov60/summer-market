@@ -14,4 +14,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("select o from Order o where o.user.username = :username")
 //    @EntityGraph(value = "orders.for-front") см. связь в классе Order
     List<Order> findAllByUsername(String username);
+
 }

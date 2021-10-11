@@ -24,7 +24,10 @@ services:
       - postgres
 
   redis:
-    image: redis:6.2.5
+    image: 'bitnami/redis:latest'
     domainname: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
     ports:
       - "6379:6379"

@@ -6,7 +6,6 @@ angular.module('app').controller('productsController', function ($scope, $http, 
             url: contextPath + '/api/v1/cart/' + $localStorage.guestCartUuid + '/add/' + productId,
             method: 'GET'
         }).then(function (response) {
-            $scope.loadCart();
         });
     }
 

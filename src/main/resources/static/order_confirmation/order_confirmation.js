@@ -19,14 +19,15 @@ angular.module('app').controller('orderConfirmationController', function ($scope
                 address: $scope.order_info.address
             }
         }).then(function successCallback(response) {
-            alert('Заказ создан');
+            alert('Заказ оформлен.');
             $scope.loadCart();
+            $location.path('/orders');
         }, function errorCallback(response) {
             alert(response.data.messages);
         });
     }
 
     $scope.loadCart();
-    console.log("cart page loaded");
+    console.log("Cart page loaded");
 
 });

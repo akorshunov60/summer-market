@@ -55,22 +55,6 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
         });
     }
 
-    // $scope.createOrder = function () {
-    //     $http({
-    //         url: contextPath + '/api/v1/orders',
-    //         method: 'POST',
-    //         params: {
-    //             phone: $scope.order_info.phone,
-    //             address: $scope.order_info.address
-    //         }
-    //     }).then(function successCallback(response) {
-    //         alert('Заказ создан');
-    //         $scope.loadCart();
-    //     }, function errorCallback(response) {
-    //         alert(response.data.messages);
-    //     });
-    // }
-
     $scope.goToOrderConfirmation = function () {
         $location.path('/order_confirmation');
     }

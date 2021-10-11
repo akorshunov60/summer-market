@@ -1,5 +1,6 @@
 package ru.geekbrains.summer.controllers;
 
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.util.MultiValueMap;
@@ -11,23 +12,31 @@ import ru.geekbrains.summer.services.ProductService;
 
 import java.util.Map;
 
-
-@RestController
 @RequiredArgsConstructor
+@Api("Set of endpoints for products")
+@RestController
 @RequestMapping("/api/v1/products")
 public class ProductController {
 
     private final ProductService productService;
 
+    @ApiOperation("Returns a specific product by their identifier. 404 if does not exist.")
     @GetMapping(value = "/{id}")
-    public ProductDto findById(@PathVariable Long id) {
+    public ProductDto findById(@ApiParam("Id of the product. Cannot be empty.") @PathVariable Long id) {
         ProductEntity p = productService
                 .findById(id).orElseThrow(
-                        () -> new ResourceNotFoundException("ProductEntity not found, id: " + id)
-                );
+                        () -> new ResourceNotFoundException(
+                                "ProductEntity not found, id: " + id
+                        ));
         return new ProductDto(p);
     }
 
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name = "title", example = "Bread", type = "String", required = false, paramType = "query"),
+            @ApiImplicitParam(name = "min_price", example = "100.0", type = "BigDecimal", required = false, paramType = "query"),
+            @ApiImplicitParam(name = "max_price", example = "2000.0", type = "BigDecimal", required = false, paramType = "query")
+    })
+    @ApiOperation("Returns list of all products in the store.")
     @GetMapping
     public Page<ProductDto> findAll(
             @RequestParam(name = "p", defaultValue = "1") int pageIndex,

@@ -17,6 +17,7 @@ import java.util.List;
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
 public class OrderController {
+
     private final OrderService orderService;
     private final UserService userService;
 
@@ -39,8 +40,13 @@ public class OrderController {
         User user = userService
                 .findByUsername(principal.getName())
                 .orElseThrow(() -> new ResourceNotFoundException("Unable to create order. User not found"));
-
         orderService.createOrder(user, address, phone);
+    }
+
+    @GetMapping("/{id}")
+    public OrderDto getOrderById(@PathVariable Long id) {
+
+        return orderService.findOrderDtoById(id);
     }
 
     @GetMapping

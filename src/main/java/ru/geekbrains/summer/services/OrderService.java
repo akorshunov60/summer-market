@@ -6,16 +6,14 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.summer.dto.OrderDto;
 import ru.geekbrains.summer.dto.OrderItemDto;
 import ru.geekbrains.summer.exceptions.ResourceNotFoundException;
-import ru.geekbrains.summer.model.Order;
-import ru.geekbrains.summer.model.OrderItem;
-import ru.geekbrains.summer.model.ProductEntity;
-import ru.geekbrains.summer.model.User;
+import ru.geekbrains.summer.model.*;
 import ru.geekbrains.summer.repositories.OrderRepository;
 import ru.geekbrains.summer.utils.Cart;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +31,7 @@ public class OrderService {
         order.setPrice(cart.getPrice());
         order.setItems(new ArrayList<>());
         order.setUser(user);
+        order.setStatus(String.valueOf(OrderStatus.подтвержден));
         order.setPhone(phone);
         order.setAddress(address);
         for (OrderItemDto o : cart.getItems()) {
@@ -58,14 +57,23 @@ public class OrderService {
 
     @Transactional
     public List<OrderDto> findAllDtosByUsername(String username) {
-        return orderRepository.findAllByUsername(username).stream().map(OrderDto::new).collect(Collectors.toList());
+        return orderRepository
+                .findAllByUsername(username)
+                .stream()
+                .map(OrderDto::new)
+                .collect(Collectors.toList());
     }
 
-    public Order findById(Long id) {
-        return orderRepository
-                .findById(id)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Order not found")
-                );
+    public Optional<Order> findOrderById(Long id) {
+        return orderRepository.findById(id);
+    }
+
+    @Transactional
+    public OrderDto findOrderDtoById(Long id) {
+        return new OrderDto(findOrderById(id).orElseThrow(
+                () -> new ResourceNotFoundException(
+                        "Order not found"
+                )
+                ));
     }
 }
